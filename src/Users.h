@@ -50,7 +50,7 @@ private:
 
 	bool not_matchPassword = true;
 	bool succesLogin = false;
-	bool userExist = false;
+	bool userOk = false;
 	bool accountPass = false;
 	bool disableAccount = false;
 	bool lockedAccount = false;
