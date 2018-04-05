@@ -59,22 +59,22 @@ bool Users::Login()
 			LoadUser.seekg(0, ios::beg);
 				i = 0;
 
-				while (LoadUser >> unit[i].username >> unit[i].password >> unit[i].accountStatus && succesLogin == false)
+			while (LoadUser >> unit[i].username >> unit[i].password >> unit[i].accountStatus && succesLogin == false)
+			{
+				if (tempUser == unit[i].username)
 				{
-					if (tempUser == unit[i].username)
+					if (tempPassword == unit[i].password)
 					{
-						if (tempPassword == unit[i].password)
-						{
-							if (unit[i].accountStatus == accountStatus1)
-								succesLogin = true;
-								else
-								lockedAccount = true;
-						}
+						if (unit[i].accountStatus == accountStatus1)
+						succesLogin = true;
 						else
+						lockedAccount = true;
+					}
+					else
+					{
+						 wrongPassword++;
+						if (wrongPassword >= 3)
 						{
-						    wrongPassword++;
-							if (wrongPassword >= 3)
-							{
 							cout << "\nYou have locked out your account, please contact your administrator" << std::endl;
 							unit[i].accountStatus = accountStatus0;
 							disableAccount = true;
@@ -124,22 +124,20 @@ void Users::CreateUser()
 	{
 		cout << "\n(8_char,1_uppercase,1_number)" << std::endl;
 
-		LoadUser.open("members.txt");
-
-	while (userOk == false)
+	while (userExist == false)
 	{
 		cout << "\nEnter the username: ";
 		getline(cin,tempUsername);
 		LoadUser.clear();
 		LoadUser.seekg(0, ios::beg);
-		userOk = true;
+		userExist = true;
 
 	while (LoadUser >> username /*>> password*/)
 	{
 		if (tempUsername == username)
 		{
 			cout << "Username is already used !" << std::endl;
-			userOk = false;
+			userExist = false;
 		}
 	}
 
