@@ -124,20 +124,20 @@ void Users::CreateUser()
 	{
 		cout << "\n(8_char,1_uppercase,1_number)" << std::endl;
 
-	while (userExist == false)
+	while (userOk == false)
 	{
 		cout << "\nEnter the username: ";
 		getline(cin,tempUsername);
 		LoadUser.clear();
 		LoadUser.seekg(0, ios::beg);
-		userExist = true;
+		userOk = true;
 
 	while (LoadUser >> username /*>> password*/)
 	{
 		if (tempUsername == username)
 		{
 			cout << "Username is already used !" << std::endl;
-			userExist = false;
+			userOk = false;
 		}
 	}
 
