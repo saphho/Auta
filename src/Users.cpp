@@ -4,8 +4,6 @@
 #include <fstream>
 #include <cstdlib>
 
-void ComparePassword (char* password1, char* password2, int lenghtPassword);
-void EnterThePassword();
 int GetNumberOfUsers();
 
 const char* users_filename = "users.txt";
@@ -54,39 +52,39 @@ bool Users::Login()
 
 		else
 		{
-			LoadUser.clear();
-			LoadUser.seekg(0, ios::beg);
-				i = 0;
+		LoadUser.clear();
+		LoadUser.seekg(0, ios::beg);
+		i = 0;
 
-				while (LoadUser >> unit[i]._username >> unit[i]._password >> unit[i]._tmpAccountStat && _succesLogin == false)
+		while (LoadUser >> unit[i]._username >> unit[i]._password >> unit[i]._tmpAccountStat && _succesLogin == false)
+		{
+			if (_tmpUsername == unit[i]._username)
 				{
-					if (_tmpUsername == unit[i]._username)
+				if (_tmpPassword == unit[i]._password)
 					{
-						if (_tmpPassword == unit[i]._password)
-						{
-							if (unit[i]._tmpAccountStat == accountStat1)
-								_succesLogin = true;
-								else
-								_lockedAccount = true;
-						}
+					if (unit[i]._tmpAccountStat == accountStat1)
+						_succesLogin = true;
 						else
+						_lockedAccount = true;
+					}
+					else
+					{
+					_wrongPassword++;
+						if (_wrongPassword >= 3)
 						{
-						    _wrongPassword++;
-							if (_wrongPassword >= 3)
-							{
-							cout << "\nYou have locked out your account, please contact your administrator" << std::endl;
-							unit[i]._tmpAccountStat = accountStat0;
-							_disableAccount = true;
-							}
+						cout << "\nYou have locked out your account, please contact your administrator" << std::endl;
+						unit[i]._tmpAccountStat = accountStat0;
+						_disableAccount = true;
 						}
 					}
-
-					i++;	// counter
-
 				}
 
-				if (_succesLogin == false && _disableAccount == false && _lockedAccount == false)
-				cout << "\nBad username or password !\n";
+				i++;
+
+		}
+
+		if (_succesLogin == false && _disableAccount == false && _lockedAccount == false)
+			cout << "\nBad username or password !\n";
 		}
 
 	GetErrorMessage (_succesLogin,_disableAccount,_lockedAccount);
@@ -153,19 +151,16 @@ void Users::CreateUser()
 	while (rightPassword == false)
 	{
 		for (int i = 0; i < _sizePassword;i++)
-			{
-				x = _Password[i];
-				ascii_dec = x;
-					if((ascii_dec >= 65 && ascii_dec <=90) && (_sizePassword >= MIN_lenght && _sizePassword <= MAX_lenght))
-						upperCaseChar=true;
-					if((ascii_dec >= 48 && ascii_dec <=57) && (_sizePassword >= MIN_lenght && _sizePassword <= MAX_lenght))
-						numericalChar=true;
-			}
+		{
+			x = _Password[i];
+			ascii_dec = x;
+			if((ascii_dec >= 65 && ascii_dec <=90) && (_sizePassword >= MIN_lenght && _sizePassword <= MAX_lenght))
+				upperCaseChar=true;
+			if((ascii_dec >= 48 && ascii_dec <=57) && (_sizePassword >= MIN_lenght && _sizePassword <= MAX_lenght))
+				numericalChar=true;
+		}
 	if (numericalChar && upperCaseChar == true)
-	{
 		rightPassword = true;
-	//	std::cout << "\nThis is right password.";
-	}
 
 	else
 	{
@@ -184,8 +179,6 @@ void Users::CreateUser()
 
 }
 
-
-/// if password matche
 
 void Users::ComparePassword (char * password1, char * password2, int lenghtPassword)
 {
@@ -208,7 +201,6 @@ void Users::ComparePassword (char * password1, char * password2, int lenghtPassw
 	if (_not_matchPassword == true)
 		std::cout << "\nPasswords do not match\n";
 }
-
 
 
 void Users::SaveToFile (Users unit[], int size, const char* fileName)
