@@ -1,142 +1,187 @@
-/*
- * Cars.cpp
- *
- *  Created on: 5. 1. 2018
- *      Author: marty
- */
-
 #include "Cars.h"
 #include <cstring>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-
-
-const int _ActuallSize = 4;
-Cars unitCar [_ActuallSize];
-
-int counter = 0;    // counter
+#include <cctype>
 
 using namespace std;
 
+const char* filename = "document.txt";
+
+int GetNumberOfCars();
+
 Cars::Cars()
 {
-	performance = 0;
-	weight = 0;
-	Var_coefficent = 0;
-	year = 0;
+	_performance = 0;
+	_weight = 0;
+	_coefficent = 0;
+	_year = 0;
 }
 
-Cars::~Cars() {
-
-}
-
-void Cars::PrintCar(Cars unit[],int counter)
+Cars::~Cars()
 {
-	cout.setf(ios_base::fixed, ios_base::floatfield);
-	cout.precision(4);
 
-	cout << "Producer: " << unit[counter].producer << endl;
-	cout << "Model: " << unit[counter].model << endl;
-	cout << "Year: " << unit[counter].year << endl;
-	cout << "Performance: " << unit[counter].performance << " Kw" << endl;
-	cout << "Weight: " << unit[counter].weight << " Kg" << endl;
-	cout << "Coefficent: " << unit[counter].Var_coefficent << endl;
-	cout << endl;
 }
 
-void Cars::SetCar()
+void Cars::Insert()
+{
+	int i = 0;
+	int size = 100;
+	char choice = 'y';
+	Cars * arrayObject = new Cars[size];
+
+	while (choice !='n')
+	{
+		arrayObject[i].Set();
+		arrayObject[i].SaveToFile();
+		cout << "\nAre you wanna save another car ? [Y/N]\n";
+		cin >> choice;
+		choice = tolower(choice);
+		cin.get();
+		i++;
+	}
+
+	delete [] arrayObject;
+}
+
+
+void Cars::Set()
 {
 	cout << "\nProducer: ";
-	getline(cin,producer);
+	getline(cin,_producer);
 	cout <<"Model: ";
-	getline(cin,model);
+	getline(cin,_model);
 	cout <<"Year: ";
-	cin >> year;
+	cin >> _year;
 	cout << "Performance: ";
-	cin >> performance;
+	cin >> _performance;
 	cout << "Weight: ";
-	cin >> weight;
+	cin >> _weight;
 	cin.get();
 }
 
-double Cars::Coefficent(double p, double w)
+void Cars::FindCar(Cars unit[], int numberOfCars)
 {
-	Var_coefficent= p/w;
-	return Var_coefficent;
-}
+	string temp_producer;
 
-void Cars::SaveCar(){
+	cout << "Enter the name of producer: \n";
+	getline(cin,temp_producer);
 
-	ofstream saveFile;
-	saveFile.open("document.txt", std::ofstream::out | std::ofstream::app);
-
-	saveFile.setf(ios_base::fixed, ios_base::floatfield);
-	saveFile.precision(4);
-
-	if (!saveFile.is_open()){
-		cout<<"Unable to load file \n";
-		cout<<"Program will now terminate \n";
-			exit(EXIT_FAILURE);}
-	else
-
-	saveFile << producer << " " << model << " " << year << " " << performance << " " << weight << " " << Coefficent(performance,weight);
-
-	saveFile.close();
-}
-
-void Cars::FindCar()
-{
-	string tempProducer;
-
-	LoadCar();
-
-	cout << "Enter the name of producer: " << endl;
-	getline(cin,tempProducer);
-
-	for (counter = 0; counter < _ActuallSize;counter++)
+	for (int i = 0; i < numberOfCars;i++)
 	{
-		if (tempProducer == unitCar[counter].producer)
-			PrintCar(unitCar,counter);
-	}
-}
-
-void Cars::InsertCar()
-{
-	int size;
-
-	cout << "\nNumber of cars: ";
-	cin >> size;
-	cin.get();
-
-	Cars arrayObject[size];
-
-	for(int i=0;i < size;i++)
-	{
-		arrayObject[i].SetCar();
-		arrayObject[i].SaveCar();
+		if (temp_producer == unit[i]._producer)
+			Print(unit,i);
 	}
 }
 
 void Cars::LoadCar()
 {
-	ifstream _loadStruct;
-	_loadStruct.open("document.txt", ios_base::in);
+	int i = 0;
+	_numberOfCars = 0;
 
-	if (!_loadStruct.is_open()){
+	_numberOfCars = GetNumberOfCars();
+	Cars * unit = new Cars [_numberOfCars];
 
-		std::cout<<"Unable to open file \n";
-		std::cout<<"Program will now terminate \n";
-		exit(EXIT_FAILURE);}
+	ifstream loading(filename, ios_base::in);
+	if (!loading.is_open())
+		cout<<"Unable to open file \n";
 
 	else
 	{
-		for (int i = 0; i < _ActuallSize; i++)
-		_loadStruct >> unitCar[i].producer >> unitCar[i].model >> unitCar[i].year >> unitCar[i].performance >> unitCar[i].weight >> unitCar[i].Var_coefficent;
+		for ( i = 0; i < _numberOfCars; i++)
+		loading >> unit[i]._producer >> unit[i]._model >> unit[i]._year >> unit[i]._performance >> unit[i]._weight >> unit[i]._coefficent;
 	}
 
-	_loadStruct.close();
+	FindCar(unit, _numberOfCars);
+
+	loading.close();
+
+	delete [] unit;
 }
+
+void Cars::SaveToFile()
+{
+	ofstream saving(filename, std::ofstream::out | std::ofstream::app);
+	saving.setf(ios_base::fixed, ios_base::floatfield);
+	saving.precision(4);
+
+	if (!saving.is_open())
+	{
+		cout << "Unable to load file \n";
+		exit(EXIT_FAILURE);
+	}
+	else
+		saving << "\n" << _producer << " " << _model << " " << _year << " " << _performance << " " << _weight << " " << Coefficent(_performance,_weight);
+
+	saving.close();
+}
+
+
+void Cars::Print(Cars unit[],int counter)
+{
+	cout.setf(ios_base::fixed, ios_base::floatfield);
+	cout.precision(4);
+
+	cout << "\nProducer: " << unit[counter]._producer;
+	cout << "\nModel: " << unit[counter]._model;
+	cout << "\nYear: " << unit[counter]._year;
+	cout << "\nPerformance: " << unit[counter]._performance << " Kw";
+	cout << "\nWeight: " << unit[counter]._weight << " Kg";
+	cout << "\nCoefficent: " << unit[counter]._coefficent << "\n";
+}
+
+
+double Cars::Coefficent(double _performance, double _weight)
+{
+	return _coefficent = _performance/_weight;;
+}
+
+
+
+int GetNumberOfCars()
+{
+	int numberOfCars = 0;
+	int size = 0;
+	string element;
+
+	ifstream loading(filename, ios_base::in);
+	if (!loading.is_open())
+		cout<<"Unable to open file \n";
+	else
+	{
+		while (loading >> element)
+			size++;
+
+	numberOfCars = size / 6;
+	}
+
+	return numberOfCars;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

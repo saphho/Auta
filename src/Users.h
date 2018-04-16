@@ -1,10 +1,3 @@
-/*
- * Users.h
- *
- *  Created on: 7. 1. 2018
- *      Author: marty
- */
-
 #ifndef USERS_H_
 #define USERS_H_
 
@@ -29,46 +22,26 @@ public:
 
 	virtual ~Users();
 
-
-
-
 private:
 
-	string username;
-	string password;
+	string _username;
+	string _password;
+	string _tmpUsername;
+	string _tmpPassword;
+	string _tmpAccountStat;
 
-	string accountStatus1 = "enable";
-	string accountStatus0 = "disable";
+	short _wrongPassword;
+	int _sizePassword;
+	short _countLogin;
+	int _countUsers;
 
-	string tempUser;
-	string tempPassword;
-
-	string accountStatus;
-
-	short wrongPassword;
-	short countLogin;
-
-	bool not_matchPassword = true;
-	bool succesLogin = false;
-	bool userOk = false;
-	bool accountPass = false;
-	bool disableAccount = false;
-	bool lockedAccount = false;
-
-	const char* users_FileName = "users.txt";
-
-	const int countUsers = 3;
-
-	char* Password = new char [20];
-	int sizePassword = 0;
-
-
-
-
-
-
-
+	bool _not_matchPassword;
+	bool _succesLogin;
+	bool _userExist;
+	bool _disableAccount;
+	bool _lockedAccount;
+	char* _Password = new char [20];
 
 };
 
-#endif /* Users_H_ */
+#endif

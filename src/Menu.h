@@ -1,10 +1,3 @@
-/*
- * Menu.h
- *
- *  Created on: 7. 1. 2018
- *      Author: marty
- */
-
 #ifndef MENU_H_
 #define MENU_H_
 
@@ -22,16 +15,18 @@ public:
 
 	void ShowFirstMenu();
 	void ShowSecondMenu();
-
-	void ControlFirstMenu(int x);
+	void ControlFirstMenu(int _choice);
 	void ControlSecondMenu(int x1);
-
-	void LogicSequenceMenu();
+	void MenuInit();
 
 	virtual ~Menu();
 
 private:
 
+	bool _loginOK;
+	bool _end;
+	int _choice;
+
 };
 
-#endif /* MENU_H_ */
+#endif
